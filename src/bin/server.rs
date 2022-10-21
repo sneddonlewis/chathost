@@ -24,10 +24,7 @@ fn handle_client(mut stream: TcpStream) {
 
 fn main() {
     println!("Server Started");
-    let host = config::get_host();
-    let port = config::get_port();
     let address = config::get_address();
-    println!("Server on host {}, port {}", host, port);
 
     let listener = TcpListener::bind(address).unwrap();
 
