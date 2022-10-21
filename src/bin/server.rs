@@ -1,15 +1,21 @@
 use std::io::{Read, Write};
 use std::net::{Shutdown, TcpListener, TcpStream};
+use std::str;
 use std::thread;
 
 use chathost::config;
 
 fn handle_client(mut stream: TcpStream) {
     let mut data = [0 as u8; 50];
+    let mut from_client = String::from("From Client: ");
     while match stream.read(&mut data) {
         Ok(size) => {
-            let message = &data[0..size];
-            stream.write(message).unwrap();
+            let message = match str::from_utf8(&data[0..size]) {
+                Ok(v) => v,
+                Err(_) => "Received corrupted data from client",
+            };
+            from_client.push_str(message);
+            stream.write(message.as_bytes()).unwrap();
             true
         }
         Err(_) => {
