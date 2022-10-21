@@ -8,7 +8,8 @@ fn handle_client(mut stream: TcpStream) {
     let mut data = [0 as u8; 50];
     while match stream.read(&mut data) {
         Ok(size) => {
-            stream.write(&data[0..size]).unwrap();
+            let message = &data[0..size];
+            stream.write(message).unwrap();
             true
         }
         Err(_) => {
